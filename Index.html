@@ -16,6 +16,7 @@
             --button-hover-bg: #ff416c;
             --success-color: #00c6ff;
             --error-color: #ff416c;
+            --icon-size: 24px;
         }
 
         body {
@@ -36,7 +37,7 @@
             padding: 30px;
             border-radius: 15px;
             width: 80%;
-            max-width: 800px;
+            max-width: 900px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
             position: relative;
             animation: fadeIn 1s ease-out;
@@ -172,6 +173,28 @@
             0% { opacity: 0; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
         }
+
+        .file-upload {
+            background-color: var(--input-bg-color);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            color: var(--text-color);
+            width: 100%;
+        }
+
+        .file-upload:hover {
+            background-color: #444;
+        }
+
+        .message-queue {
+            background-color: #444;
+            color: var(--text-color);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +213,8 @@
     <div id="embed-content" class="tab-content active">
         <input type="text" id="webhook-url" placeholder="Enter Webhook URL" />
         <textarea id="embed-message" placeholder="Enter Embed Message (Optional)"></textarea>
+        <input type="text" id="image-url" placeholder="Image URL (Optional)" />
+        <input type="text" id="gif-url" placeholder="GIF URL (Optional)" />
         <input type="number" id="interval" placeholder="Interval (in ms)" />
         <button onclick="startSpamming('embed')">Start Spamming</button>
         <button class="stop-button" onclick="stopSpamming()">Stop Spamming</button>
@@ -208,11 +233,13 @@
         <button onclick="deleteWebhook()">Delete Webhook</button>
     </div>
 
+    <div class="message-queue" id="messageQueue"></div>
     <div class="output-box" id="output"></div>
 </div>
 
 <script>
     let spammingInterval;
+    let messageQueue = [];
 
     document.getElementById('embed-btn').onclick = () => switchTab('embed');
     document.getElementById('plain-btn').onclick = () => switchTab('plain');
@@ -232,6 +259,8 @@
         const url = mode === 'embed' ? document.getElementById('webhook-url').value : document.getElementById('webhook-url-plain').value;
         const message = mode === 'embed' ? document.getElementById('embed-message').value : document.getElementById('plain-message').value;
         const interval = mode === 'embed' ? document.getElementById('interval').value : document.getElementById('interval-plain').value;
+        const imageUrl = document.getElementById('image-url').value;
+        const gifUrl = document.getElementById('gif-url').value;
 
         if (!url || !interval) {
             displayError("Webhook URL and Interval are required!");
@@ -239,6 +268,7 @@
         }
 
         displaySuccess("Spamming started...");
+        addToQueue(message);
 
         let messageData;
         if (mode === 'embed') {
@@ -249,6 +279,8 @@
                     description: message,
                     color: 0x00c6ff,
                     timestamp: new Date(),
+                    image: { url: gifUrl || imageUrl },
+                    footer: { text: "Custom Footer" }
                 }]
             };
         } else {
@@ -265,7 +297,6 @@
                     displayError("Error sending message!");
                     return;
                 }
-                console.log('Message sent successfully!');
             }).catch(error => {
                 console.error("Error:", error);
             });
@@ -308,6 +339,11 @@
     function displaySuccess(message) {
         const output = document.getElementById('output');
         output.innerHTML = `<p class="success">${message}</p>`;
+    }
+
+    function addToQueue(message) {
+        messageQueue.push(message);
+        document.getElementById('messageQueue').innerHTML = `Messages in Queue: ${messageQueue.length}`;
     }
 </script>
 
