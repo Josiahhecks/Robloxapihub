@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox API Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="profile">Profile Lookup</button>
+            <button class="tab-btn" data-tab="games">Game Stats</button>
+            <button class="tab-btn" data-tab="trade">Trade Calculator</button>
+            <button class="tab-btn" data-tab="groups">Group Checker</button>
+            <button class="tab-btn" data-tab="avatar">Avatar Randomizer</button>
+        </nav>
+
+        <main id="content">
+            <div id="profile" class="tab-content active">
+                <input type="text" id="username-input" placeholder="Enter Roblox Username" aria-label="Enter Roblox Username">
+                <button id="fetch-profile">Fetch Profile</button>
+                <div id="profile-result"></div>
+            </div>
+
+            <div id="games" class="tab-content">
+                <input type="text" id="game-input" placeholder="Enter Game ID" aria-label="Enter Game ID">
+                <button id="fetch-game">Fetch Game Stats</button>
+                <div id="game-result"></div>
+            </div>
+
+            <div id="trade" class="tab-content">
+                <input type="text" id="item-input" placeholder="Enter Limited Item ID" aria-label="Enter Limited Item ID">
+                <button id="calculate-trade">Calculate Value</button>
+                <div id="trade-result"></div>
+            </div>
+
+            <div id="groups" class="tab-content">
+                <input type="text" id="group-input" placeholder="Enter Username" aria-label="Enter Username">
+                <button id="fetch-groups">Check Groups</button>
+                <div id="group-result"></div>
+            </div>
+
+            <div id="avatar" class="tab-content">
+                <button id="randomize-avatar">Randomize Avatar</button>
+                <div id="avatar-result"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
