@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webhook Spammer</title>
+    <title>Webhook Spammer & Deleter</title>
     <style>
         /* Global Styles */
         * {
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #2b3e50;
+            background-color: #000;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -22,39 +22,47 @@
             height: 100vh;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
+            animation: backgroundAnimation 5s linear infinite;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-color: #2c3e50;
+            }
+
+            50% {
+                background-color: #34495e;
+            }
+
+            100% {
+                background-color: #2c3e50;
+            }
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
             border-radius: 15px;
-            padding: 20px;
-            background: linear-gradient(45deg, #34495e, #2c3e50);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1.2s ease-in-out;
+            padding: 30px;
+            background: #34495e;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .container:hover {
+            transform: scale(1.05);
         }
 
         header {
             margin-bottom: 30px;
+            color: #ecf0f1;
         }
 
         header h1 {
-            color: #ecf0f1;
-            font-size: 3em;
+            font-size: 3.5em;
             letter-spacing: 2px;
-            margin-bottom: 10px;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
@@ -64,15 +72,17 @@
         }
 
         .form-area {
-            background-color: #34495e;
+            background-color: #2c3e50;
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
         }
 
-        .form-area:hover {
-            transform: scale(1.05);
+        .form-area label {
+            font-size: 1.1em;
+            color: #fff;
+            margin-bottom: 10px;
+            display: block;
         }
 
         input,
@@ -82,7 +92,7 @@
             margin-bottom: 20px;
             border-radius: 10px;
             border: 2px solid #1abc9c;
-            background-color: #2c3e50;
+            background-color: #34495e;
             color: white;
             font-size: 1.1em;
             transition: all 0.3s ease;
@@ -95,7 +105,14 @@
             box-shadow: 0 0 10px rgba(22, 160, 133, 0.5);
         }
 
-        button {
+        .option-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
             background-color: #2980b9;
             padding: 15px 30px;
             color: white;
@@ -103,11 +120,10 @@
             border-radius: 8px;
             font-size: 1.2em;
             cursor: pointer;
-            width: 100%;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        button:hover {
+        .option-btn:hover {
             background-color: #3498db;
             transform: translateY(-5px);
         }
@@ -122,7 +138,6 @@
             justify-content: center;
             align-items: center;
             color: #ecf0f1;
-            animation: fadeIn 1s ease-in-out;
         }
 
         .embed-preview {
@@ -132,7 +147,6 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
         }
 
         .embed-preview h3,
@@ -161,25 +175,22 @@
 <body>
     <div class="container">
         <header>
-            <h1>Webhook Spammer</h1>
-            <p>Design Your Webhooks with Style</p>
+            <h1>Webhook Spammer & Deleter</h1>
+            <p>Choose Your Mode: Embed, Plain Message, or Webhook Deleter</p>
         </header>
 
-        <div class="form-area">
+        <div class="option-buttons">
+            <button class="option-btn" id="embed-mode">Embed Mode</button>
+            <button class="option-btn" id="plain-mode">Plain Message</button>
+            <button class="option-btn" id="deleter-mode">Webhook Deleter</button>
+        </div>
+
+        <div class="form-area" id="form-area">
             <label for="webhook-url">Webhook URL:</label>
             <input type="text" id="webhook-url" placeholder="Enter Webhook URL">
 
-            <label for="embed-title">Embed Title:</label>
-            <input type="text" id="embed-title" placeholder="Enter Title">
-
-            <label for="embed-description">Embed Description:</label>
-            <textarea id="embed-description" placeholder="Enter Description"></textarea>
-
-            <label for="embed-color">Embed Color:</label>
-            <input type="color" id="embed-color" value="#3498db">
-
-            <label for="embed-footer">Embed Footer:</label>
-            <input type="text" id="embed-footer" placeholder="Enter Footer">
+            <label for="message">Message:</label>
+            <textarea id="message" placeholder="Enter Your Message Here"></textarea>
 
             <label for="interval">Spam Interval (ms):</label>
             <input type="number" id="interval" placeholder="500">
@@ -187,53 +198,77 @@
             <button id="start-spam">Start Spamming</button>
         </div>
 
-        <div class="preview">
+        <div class="preview" id="preview-area">
             <h2>Live Preview</h2>
-            <div class="embed-preview" id="preview-area">
+            <div class="embed-preview" id="embed-preview">
                 <h3>Sample Title</h3>
                 <p>Sample description for the embed message.</p>
             </div>
         </div>
 
         <footer>
-            <p class="footer-text">Advanced Webhook Spammer | Designed with love</p>
+            <p class="footer-text">Webhook Spammer & Deleter | Designed with love</p>
         </footer>
     </div>
 
     <script>
+        let currentMode = 'embed'; // Default mode
+
+        document.getElementById('embed-mode').addEventListener('click', () => setMode('embed'));
+        document.getElementById('plain-mode').addEventListener('click', () => setMode('plain'));
+        document.getElementById('deleter-mode').addEventListener('click', () => setMode('deleter'));
+
         document.getElementById("start-spam").addEventListener("click", startSpamming);
+
+        function setMode(mode) {
+            currentMode = mode;
+            const formArea = document.getElementById('form-area');
+            const previewArea = document.getElementById('preview-area');
+
+            if (mode === 'embed') {
+                formArea.style.display = 'block';
+                previewArea.style.display = 'block';
+            } else if (mode === 'plain') {
+                formArea.style.display = 'block';
+                previewArea.style.display = 'none';
+            } else if (mode === 'deleter') {
+                formArea.style.display = 'block';
+                previewArea.style.display = 'none';
+            }
+        }
 
         function startSpamming() {
             const webhookUrl = document.getElementById("webhook-url").value;
-            const embedTitle = document.getElementById("embed-title").value;
-            const embedDescription = document.getElementById("embed-description").value;
-            const embedColor = document.getElementById("embed-color").value;
-            const embedFooter = document.getElementById("embed-footer").value;
+            const message = document.getElementById("message").value;
             const interval = document.getElementById("interval").value;
 
-            if (!webhookUrl || !embedTitle || !embedDescription || !embedColor || !embedFooter || !interval) {
+            if (!webhookUrl || !message || !interval) {
                 alert("Please fill out all fields!");
                 return;
             }
 
-            const embedMessage = {
-                embeds: [{
-                    title: embedTitle,
-                    description: embedDescription,
-                    color: parseInt(embedColor.replace("#", ""), 16),
-                    footer: { text: embedFooter },
-                }]
-            };
+            if (currentMode === 'embed') {
+                const embedMessage = {
+                    embeds: [{
+                        title: 'Webhook Embed',
+                        description: message,
+                        color: 0x1abc9c
+                    }]
+                };
 
-            const previewArea = document.getElementById("preview-area");
-            previewArea.innerHTML = `
-                <h3>${embedTitle}</h3>
-                <p>${embedDescription}</p>
-                <footer>${embedFooter}</footer>
-            `;
+                sendWebhook(webhookUrl, embedMessage);
+            } else if (currentMode === 'plain') {
+                sendWebhook(webhookUrl, { content: message });
+            } else if (currentMode === 'deleter') {
+                deleteWebhook(webhookUrl);
+            }
 
             setInterval(() => {
-                sendWebhook(webhookUrl, embedMessage);
+                if (currentMode === 'embed') {
+                    sendWebhook(webhookUrl, { embeds: [{ title: 'Webhook Embed', description: message, color: 0x1abc9c }] });
+                } else if (currentMode === 'plain') {
+                    sendWebhook(webhookUrl, { content: message });
+                }
             }, parseInt(interval));
         }
 
@@ -247,11 +282,26 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Webhook Sent:", data);
+                    console.log("Webhook sent:", data);
                 })
-                .catch(error => {
+               .catch(error => {
                     console.error("Error sending webhook:", error);
                 });
+        }
+
+        function deleteWebhook(url) {
+            fetch(url, {
+                method: "DELETE",
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Webhook deleted:", data);
+                alert("Webhook deleted successfully!");
+            })
+            .catch(error => {
+                console.error("Error deleting webhook:", error);
+                alert("Error deleting the webhook!");
+            });
         }
     </script>
 </body>
