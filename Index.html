@@ -14,6 +14,8 @@
             --input-bg-color: #333344;
             --border-color: #444;
             --button-hover-bg: #ff416c;
+            --success-color: #00c6ff;
+            --error-color: #ff416c;
         }
 
         body {
@@ -110,6 +112,15 @@
             background-color: var(--button-hover-bg);
         }
 
+        .stop-button {
+            background-color: #ff4c4c;
+            margin-top: 20px;
+        }
+
+        .stop-button:hover {
+            background-color: #ff3333;
+        }
+
         .output-box {
             background-color: #383838;
             padding: 15px;
@@ -126,20 +137,15 @@
         }
 
         .error {
-            color: #ff416c;
+            color: var(--error-color);
             margin-top: 10px;
             text-align: center;
         }
 
         .success {
-            color: #00c6ff;
+            color: var(--success-color);
             margin-top: 10px;
             text-align: center;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
         }
 
         .background-animation {
@@ -161,6 +167,11 @@
             50% { transform: scale(1); }
             100% { transform: scale(1.1); }
         }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -181,6 +192,7 @@
         <textarea id="embed-message" placeholder="Enter Embed Message (Optional)"></textarea>
         <input type="number" id="interval" placeholder="Interval (in ms)" />
         <button onclick="startSpamming('embed')">Start Spamming</button>
+        <button class="stop-button" onclick="stopSpamming()">Stop Spamming</button>
     </div>
 
     <div id="plain-content" class="tab-content">
@@ -188,6 +200,7 @@
         <input type="text" id="plain-message" placeholder="Enter Plain Message" />
         <input type="number" id="interval-plain" placeholder="Interval (in ms)" />
         <button onclick="startSpamming('plain')">Start Spamming</button>
+        <button class="stop-button" onclick="stopSpamming()">Stop Spamming</button>
     </div>
 
     <div id="deleter-content" class="tab-content">
@@ -199,6 +212,8 @@
 </div>
 
 <script>
+    let spammingInterval;
+
     document.getElementById('embed-btn').onclick = () => switchTab('embed');
     document.getElementById('plain-btn').onclick = () => switchTab('plain');
     document.getElementById('deleter-btn').onclick = () => switchTab('deleter');
@@ -240,7 +255,7 @@
             messageData = { content: message };
         }
 
-        setInterval(() => {
+        spammingInterval = setInterval(() => {
             fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -255,6 +270,13 @@
                 console.error("Error:", error);
             });
         }, parseInt(interval));
+    }
+
+    function stopSpamming() {
+        if (spammingInterval) {
+            clearInterval(spammingInterval);
+            displaySuccess("Spamming stopped.");
+        }
     }
 
     function deleteWebhook() {
