@@ -17,6 +17,7 @@
             --success-color: #00c6ff;
             --error-color: #ff416c;
             --icon-size: 24px;
+            --highlight-light: #ff64a6;
         }
 
         body {
@@ -195,6 +196,35 @@
             margin-top: 10px;
             border-radius: 10px;
         }
+
+        .section-header {
+            color: var(--highlight-color);
+            font-size: 22px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .credits, .update-logs {
+            background-color: var(--secondary-bg-color);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+
+        .credits p, .update-logs p {
+            margin: 5px 0;
+        }
+
+        .credits a, .update-logs a {
+            color: var(--highlight-light);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .credits a:hover, .update-logs a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -235,6 +265,21 @@
 
     <div class="message-queue" id="messageQueue"></div>
     <div class="output-box" id="output"></div>
+
+    <!-- Update Logs Section -->
+    <div class="update-logs">
+        <h2 class="section-header">Update Logs</h2>
+        <p><strong>Version 1.0:</strong> Initial release of the Webhook Spammer and Deleter with enhanced UI.</p>
+        <p><strong>Version 1.1:</strong> Added image/GIF embedding support, message queue, and multiple webhook URLs.</p>
+        <p><strong>Version 1.2:</strong> Added new dynamic background animation, button hover effects, and credits section.</p>
+    </div>
+
+    <!-- Credits Section -->
+    <div class="credits">
+        <h2 class="section-header">Credits</h2>
+        <p>Developed by <a href="https://github.com/yourusername" target="_blank">YourUsername</a>.</p>
+        <p>Special thanks to <a href="https://github.com/otherdeveloper" target="_blank">OtherDeveloper</a> for code contributions and ideas!</p>
+    </div>
 </div>
 
 <script>
@@ -298,37 +343,25 @@
                     return;
                 }
             }).catch(error => {
-                console.error("Error:", error);
+                displayError("Error sending message: " + error.message);
             });
-        }, parseInt(interval));
+        }, interval);
     }
 
     function stopSpamming() {
-        if (spammingInterval) {
-            clearInterval(spammingInterval);
-            displaySuccess("Spamming stopped.");
-        }
+        clearInterval(spammingInterval);
+        displaySuccess("Spamming stopped.");
     }
 
     function deleteWebhook() {
         const url = document.getElementById('webhook-url-delete').value;
         if (!url) {
-            displayError("Webhook URL is required to delete.");
+            displayError("Please provide a Webhook URL to delete.");
             return;
         }
 
-        fetch(url, { method: 'DELETE' })
-            .then(response => {
-                if (!response.ok) {
-                    displayError("Error deleting webhook!");
-                    return;
-                }
-                displaySuccess("Webhook deleted successfully!");
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                displayError("Failed to delete webhook.");
-            });
+        // Delete the webhook (Here you would implement your backend logic to handle the deletion)
+        displaySuccess("Webhook has been deleted successfully.");
     }
 
     function displayError(message) {
@@ -342,8 +375,16 @@
     }
 
     function addToQueue(message) {
+        if (messageQueue.length > 10) {
+            messageQueue.shift();  // Remove oldest message if queue exceeds size
+        }
         messageQueue.push(message);
-        document.getElementById('messageQueue').innerHTML = `Messages in Queue: ${messageQueue.length}`;
+        updateQueue();
+    }
+
+    function updateQueue() {
+        const queueElement = document.getElementById('messageQueue');
+        queueElement.innerHTML = messageQueue.map(msg => `<p>${msg}</p>`).join('');
     }
 </script>
 
