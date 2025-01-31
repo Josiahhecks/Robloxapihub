@@ -1,0 +1,155 @@
+:root {
+    --primary-color: #2c2f33;
+    --secondary-color: #7289da;
+    --text-color: #ffffff;
+    --button-hover: #5865f2;
+    --card-bg: #40444b;
+    --error-color: #ff4444;
+    --input-bg: #40444b;
+    --input-border: #7289da;
+    --button-bg: #7289da;
+    --button-border-radius: 6px;
+    --tab-bg: #2f3136;
+    --tab-hover-bg: #5865f2;
+    --tab-active-bg: #5865f2;
+    --container-width: 80%;
+    --max-width: 1200px;
+}
+
+body {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    background-color: var(--tab-bg);
+    border: 1px solid transparent;
+    color: var(--text-color);
+    padding: 12px 25px;
+    border-radius: var(--button-border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.tab-btn:hover {
+    background-color: var(--tab-hover-bg);
+}
+
+.tab-btn.active {
+    background-color: var(--tab-active-bg);
+    border-color: var(--secondary-color);
+}
+
+.tab-content {
+    display: none;
+    padding: 30px;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+input {
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    width: 100%;
+    max-width: 350px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 25px;
+    border-radius: var(--button-border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    width: 100%;
+    max-width: 350px;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+.profile-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.profile-card h2,
+.profile-card p {
+    margin: 10px 0;
+}
+
+.error {
+    color: var(--error-color);
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .tab-navigation {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tab-btn {
+        width: 100%;
+        padding: 14px 25px;
+        font-size: 18px;
+    }
+
+    input,
+    button {
+        width: 90%;
+    }
+}
